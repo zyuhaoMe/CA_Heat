@@ -60,4 +60,57 @@ void Update_Temperature_Field(double ***temp, double ***temp_old, int xsize, int
 
 }
 
+double calculateIntegrandVal(double timeVal, double timeca, double xVal, double yVal, double zVal)
+{
+    double integrandVal;
+    double innerConstant; // to avoid repeated calculation, calculate a constant first
+    double phiX, phiY, phiZ; // inner constant
+
+    innerConstant = 12 * thermalDiffusivity * (timeca - timeVal);
+
+    phiX = innerConstant + pow(beamRadiusX, 2);
+    phiY = innerConstant + pow(beamRadiusY, 2);
+    phiZ = innerConstant + pow(beamRadiusZ, 2);
+
+    double laserPosition[2];
+    calculateHeatSourcePositionSpiral(timeVal, laserPosition);
+    // integrandVal has a long expression, please check the analytical formula in the report
+    integrandVal = 1 / sqrt(phiX * phiY * phiZ) *
+                   exp(-3 * pow(xVal - laserPosition[0], 2) / phiX -
+                       3 * pow(yVal - laserPosition[1], 2) / phiY -
+                       3 * pow(zVal, 2) /phiZ) ;
+
+    return  integrandVal;
+}
+
+void calculateHeatSourcePositionSpiral(double timeVal, double* laserPosition)
+{
+    laserPosition[0] = 0.001 * 2 - (spiralRadius - radiusDifference / cycleTime * timeVal)
+                                   * cos(2 * PI / cycleTime * timeVal);
+    laserPosition[1] = 0.001 * 2 - (spiralRadius - radiusDifference / cycleTime * timeVal)
+                                   * sin(2 * PI / cycleTime * timeVal); // these two expression should be checked with the output of python
+}
+
+double calculatePhysicalConstant()
+{
+    double physicalConstant;
+    physicalConstant = 2 * powerAbsorptivity * powerLaser / (materialDensity * specificHeat *
+                                                             pow(PI / 3, 1.5));
+    return  physicalConstant;
+}
+
+double computeVelocitySpiral(double timeca)
+{
+    double linearVelocity;
+    if(timeca <= cycleTime)
+    {
+        // add both the components of velocity tangent to radius and perpendicular to radius
+        linearVelocity = sqrt(pow((2 * PI / cycleTime, 2) * (spiralRadius - timeca / cycleTime) * radiusDifference
+                , 2) + pow(radiusDifference / cycleTime, 2));
+    }else{
+        linearVelocity = 0.0;
+    }
+    return linearVelocity;
+}
+
 
