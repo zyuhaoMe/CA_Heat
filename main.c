@@ -52,7 +52,6 @@ int main(int argc, char *argv[]) {
     grain_size = 30e-6;  // initial grain size if want to have solid regions (not used here)
 
 
-
     Tdot = Gy * Vy;
     //srand (time(NULL));
 
@@ -405,37 +404,37 @@ int main(int argc, char *argv[]) {
 
             sprintf(filename, "./tecplot_output/tecplot_%d.dat", timect);
             printf("writing output \n");
-            fw = fopen(filename, "w");
-
-            fprintf(fw,"VARIABLES=\"X\" \"Y\" \"Z\" \"nucindex\" \"temperature\" \n");
-            fprintf(fw,"ZONE T=\"%d\",I=%i, J=%i, K=%i, F=POINT,\n", timect, xsize, ysize, zsize);
-            fprintf(fw,"SOLUTIONTIME=%le \n", timect * dtca);
-            for(k = 0; k < zsize; k++){
-                for(j = 0; j < ysize; j++){
-                    for(i = 0; i < xsize; i++){
-                        fprintf(fw, "%le %le %le %le %le \n", xc[i], yc[j], zc[k], nucindex[i][j][k], temp[i][j][k]);
-                    }
-                }
-            }
-            fclose(fw);
-        }
+//            fw = fopen(filename, "w");
+//
+//            fprintf(fw,"VARIABLES=\"X\" \"Y\" \"Z\" \"nucindex\" \"temperature\" \n");
+//            fprintf(fw,"ZONE T=\"%d\",I=%i, J=%i, K=%i, F=POINT,\n", timect, xsize, ysize, zsize);
+//            fprintf(fw,"SOLUTIONTIME=%le \n", timect * dtca);
+//            for(k = 0; k < zsize; k++){
+//                for(j = 0; j < ysize; j++){
+//                    for(i = 0; i < xsize; i++){
+//                        fprintf(fw, "%le %le %le %le %le \n", xc[i], yc[j], zc[k], nucindex[i][j][k], temp[i][j][k]);
+//                    }
+//                }
+//            }
+//            fclose(fw);
+//        }
     }
 
-    // write out data for mtex analysis
-    sprintf(filename, "./mtex/Euler.dat");
-    printf("writing Euler angles \n");
-    fw = fopen(filename, "w");
-    fprintf(fw,"VARIABLES=\"x(mm)\" \"y(mm)\" \"z(mm)\" \"nucindex\" \"phi1\" \"Phi\" \"phi2\" \n");
-    fprintf(fw,"ZONE T=\"%d\",I=%i, J=%i, K=%i, F=POINT \n", timeend, xsize, ysize, zsize);
-    for(k = 0; k < zsize; k++){
-        for(j = 0; j < ysize; j++){
-            for(i = 0; i < xsize; i++){
-                fprintf(fw, "%le %le %le %le %le %le %le \n", xc[i], yc[j], zc[k], nucindex[i][j][k], phi1[i][j][k], \
-                  Phi[i][j][k], phi2[i][j][k]);
-            }
-        }
-    }
-    fclose(fw);
+//    // write out data for mtex analysis
+//    sprintf(filename, "./mtex/Euler.dat");
+//    printf("writing Euler angles \n");
+//    fw = fopen(filename, "w");
+//    fprintf(fw,"VARIABLES=\"x(mm)\" \"y(mm)\" \"z(mm)\" \"nucindex\" \"phi1\" \"Phi\" \"phi2\" \n");
+//    fprintf(fw,"ZONE T=\"%d\",I=%i, J=%i, K=%i, F=POINT \n", timeend, xsize, ysize, zsize);
+//    for(k = 0; k < zsize; k++){
+//        for(j = 0; j < ysize; j++){
+//            for(i = 0; i < xsize; i++){
+//                fprintf(fw, "%le %le %le %le %le %le %le \n", xc[i], yc[j], zc[k], nucindex[i][j][k], phi1[i][j][k], \
+//                  Phi[i][j][k], phi2[i][j][k]);
+//            }
+//        }
+//    }
+//    fclose(fw);
 
     Free_1D_Double(xc, xsize);
     Free_1D_Double(yc, ysize);
